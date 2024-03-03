@@ -18,7 +18,7 @@ exports.register = (req, res) => {
             };
             User.create(newUserData, (err, user) => {
                 if (!err) {
-                    res.json({ message : 'Register successfully!'});
+                    res.status(200).json({ message : 'Register successfully!'});
                 }
             });
         });

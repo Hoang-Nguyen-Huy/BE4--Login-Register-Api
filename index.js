@@ -4,7 +4,15 @@ const port = 3000;
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const cors = require('cors');
 require('dotenv/config');
+
+app.use(cors({ origin: 'http://localhost:5173 '}));
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
@@ -26,7 +34,7 @@ app.use(session({
 }));
 
 app.get('/', (req, res) => {
-    res.json({ message: 'hello world' });
+    res.status(200).json({ message: 'hello world' });
 });
 
 require('./src/routes/auth.route')(app);

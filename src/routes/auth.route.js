@@ -8,7 +8,7 @@ module.exports = app => {
     router.post('/login', login.login);
 
     // router.get('/register', authMiddleware.isAuth, register.register);
-    router.post('/register', register.register)
+    router.post('/accounts', register.register)
 
     router.get('/logout', authMiddleware.loggedin, login.logout);
     

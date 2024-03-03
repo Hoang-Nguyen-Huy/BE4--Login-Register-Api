@@ -7,15 +7,16 @@ exports.login = (req, res) => {
     if (username && password) {
         User.findByUserName(username, (err, user) => {
             if (!user) {
-                res.status(404).json({ message: 'Login failed' });
+                res.status(404).json({ message: 'User not found!!!' });
             } else {
                 bcrypt.compare(password, user.password, (err, result) => {
                     if (result === true) {
                         req.session.loggedin = true;
                         req.session.user = user;
-                        res.status(200).json({ message: 'Login successfully' });
+                        // res.status(200).json({ message: 'Login successfully' });
+                        res.redirect('/auth/profile');
                     } else {
-                        res.status(404).json({ messgae: 'Login failed' });
+                        res.status(404).json({ message: 'Incorrect password' });
                     }
                 });
             }

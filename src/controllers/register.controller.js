@@ -28,8 +28,7 @@ exports.register = (req, res) => {
                         console.error('Error creating user: ', err);
                         return res.status(500).json({ message: 'Error creating user' });
                     }
-
-                    return res.status(200).json({ message: 'Register successfully!' });
+                    return res.status(200).json({ id: newUser.userid, username });
                 });
             });
         });

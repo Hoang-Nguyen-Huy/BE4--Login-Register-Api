@@ -10,7 +10,7 @@ module.exports = app => {
     // router.get('/register', authMiddleware.isAuth, register.register);
     router.post('/accounts', register.register)
 
-    router.get('/logout', authMiddleware.loggedin, login.logout);
+    // router.get('/logout', authMiddleware.loggedin, login.logout);
     
     app.use(router);
 }

@@ -43,5 +43,20 @@ User.findByUserName = (username, result) => {
     });
 };
 
+User.findByUserId = (userid, result) => {
+    sql.query(`SELECT * FROM user WHERE userid = '${userid}'`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        if (res.length) {
+            result(null, res[0]);
+            return;
+        }
+        result(null, null);
+    });
+};
+
 module.exports = User;
 

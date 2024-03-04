@@ -10,14 +10,9 @@ module.exports = app => {
     //     res.status(200).json({ message : 'hello' });
     // });
 
-    router.get('/auth/profile', authMiddleware.loggedin, (req, res) => {
-        console.log(req.session.user);
-        if (req.session.loggedin) {
-            const { userid, username } = req.session.user; // Lấy id và username từ session
-            return res.status(200).json({ userid, username });
-        } else {
-            return res.status(401).json({ message: 'You are not logged in!' });
-        }
+    router.get('/auth/profile', authMiddleware.authenticateJWT, (req, res) => {
+        const { userid, username } = req.user;
+        res.status(200).json({ id: userid, username });
     });
     
     app.use(router);

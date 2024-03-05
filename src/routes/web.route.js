@@ -11,6 +11,7 @@ module.exports = app => {
     // });
 
     router.get('/auth/profile', authMiddleware.authenticateJWT, (req, res) => {
+        // console.log(req.headers);
         const { userid, username } = req.user;
         res.status(200).json({ id: userid, username });
     });

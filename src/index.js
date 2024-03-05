@@ -37,8 +37,10 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'hello world' });
 });
 
-require('./routes/auth.route')(app);
-require('./routes/web.route')(app);
+const funcAuthRoute = require('./routes/auth.route');
+funcAuthRoute(app);
+const funcWebRoute = require('./routes/web.route');
+funcWebRoute(app);
 
 app.listen(port, () => {
     console.log(`\nnavigate to http://localhost:${port}\n`);

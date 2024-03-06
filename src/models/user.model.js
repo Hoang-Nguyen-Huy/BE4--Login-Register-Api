@@ -18,14 +18,16 @@ const User = function(user) {
 };
 
 User.create = (newUser, result) => {
-    //Generate a random UUID (v4)
-    const uuid = crypto.randomUUID();
+    if (!newUser.userid) {
+        //Generate a random UUID (v4)
+        const uuid = crypto.randomUUID();
 
-    //Hash the UUID with MD5
-    const md5hash = crypto.createHash('md5').update(uuid).digest('hex');
+        //Hash the UUID with MD5
+        const md5hash = crypto.createHash('md5').update(uuid).digest('hex');
 
-    //Use md5hash as the userid in newUser
-    newUser.userid = md5hash;
+        //Use md5hash as the userid in newUser
+        newUser.userid = md5hash;
+    }
 
     //Extract detail from User
     const { detail, ...userWithoutDetail } = newUser;
@@ -46,7 +48,7 @@ User.create = (newUser, result) => {
             }
 
             //Add userid to detail object
-            detail.userid = md5hash;
+            detail.userid = newUser.userid;
 
             //Insert into user_detail table
             sql.query("INSERT INTO user_detail SET ?", detail, function(err, res) {
@@ -66,7 +68,7 @@ User.create = (newUser, result) => {
                         });
                     }
 
-                    console.log("created user: ", { userid: md5hash, ...userWithoutDetail, ...detail });
+                    console.log("created user: ", { userid: newUser.userid, ...userWithoutDetail, ...detail });
 
                     // Remove userid from detail before returning the result
                     delete detail.userid;

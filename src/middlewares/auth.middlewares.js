@@ -27,11 +27,11 @@ exports.authenticateJWT = (req, res, next) => {
             if (err) {
                 res.status(401).json({ message: 'Unauthorized' });
             } else {
-                User.findByUserId(decoded.id, (err, user) => {
+                User.findUserDetailByID(decoded.id, (err, user) => {
                     if (err || !user) {
                         res.status(401).json({ message: 'Unauthorized' });
                     } else {
-                        req.user = user;
+                        req.user = user;  // user include {user, userDetail}
                         next();
                     }
                 });

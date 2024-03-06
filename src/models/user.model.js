@@ -109,5 +109,44 @@ User.findByUserId = (userid, result) => {
     });
 };
 
+User.findUserDetailByID = (userid, result) => {
+    let user;
+    let userDetail;
+
+    // Query user table
+    sql.query(`SELECT * FROM user WHERE userid = '${userid}'`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        
+        if (res.length === 0) {
+            result(null, null); // No user found with the given userid
+            return;
+        }
+
+        user = res[0];
+
+        // Query user_detail table
+        sql.query(`SELECT * FROM user_detail WHERE userid = '${userid}'`, (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+                return;
+            }
+            
+            if (res.length === 0) {
+                userDetail = {}; // No user detail found for the given userid
+            } else {
+                userDetail = res[0];
+            }
+
+            // Return the combined user and userDetail objects
+            result(null, { user, userDetail });
+        });
+    });
+};
+
 module.exports = User;
 

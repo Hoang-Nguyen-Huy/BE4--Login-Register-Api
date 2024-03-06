@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt');
 require('dotenv/config');
 
 exports.register = (req, res) => {
-    const { username, password } = req.body;
-    if (username && password) {
+    const { username, password, role, detail } = req.body;
+    if ((username && password && role && detail) || (username && password && detail)) {
         // Check if the user exists
         User.findByUserName(username, (err, user) => {
             if (err) {
@@ -23,12 +23,25 @@ exports.register = (req, res) => {
                 }
 
                 // Create the user
-                User.create({ username, password: hashedPassword }, (err, newUser) => {
+                const createUser = {
+                    username: username, 
+                    password: hashedPassword, 
+                    role: role === undefined ? 1 : role, 
+                    detail: detail
+                };
+
+                User.create(createUser, (err, newUser) => {
                     if (err) {
                         console.error('Error creating user: ', err);
                         return res.status(500).json({ message: 'Error creating user' });
                     }
-                    return res.status(200).json({ id: newUser.userid, username });
+                    const responseData = {
+                        id: newUser.userid, 
+                        username: username, 
+                        role: role === undefined ? 1 : role, 
+                        detail: newUser.detail
+                    };
+                    return res.status(200).json(responseData);
                 });
             });
         });

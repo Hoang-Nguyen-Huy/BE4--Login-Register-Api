@@ -41,3 +41,14 @@ exports.authenticateJWT = (req, res, next) => {
         res.status(401).json({ message: 'Unauthorized' });
     }
 };
+
+exports.authorization = (req, res, next) => {
+    const user = req.user.user;
+    if(user.role === 0) {
+        console.log(user);
+        next();
+    } else {
+        console.log(user);
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};

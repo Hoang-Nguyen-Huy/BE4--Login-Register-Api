@@ -9,6 +9,10 @@ module.exports = app => {
     //     res.status(200).json({ message : 'hello' });
     // });
 
+    // router.get('/accounts/', authMiddleware.authenticateJWT, authMiddleware.authorization, (req, res) => {
+    //     console.log('hello i am admin');
+    // });
+
     router.get('/auth/profile', authMiddleware.authenticateJWT, (req, res) => {
         // console.log(req.headers);
         //req.user inclue {user, userDetail}
@@ -21,7 +25,7 @@ module.exports = app => {
         res.status(200).json({ id: userId, username: userName, role: userRole, detail: userDetail });
     });
 
-    router.put('/accounts/detail', updateAccount.update);
+    router.put('/accounts/detail', updateAccount.update);  
     
     app.use(router);
 }

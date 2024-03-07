@@ -48,7 +48,7 @@ exports.authorization = (req, res, next) => {
         console.log(user);
         next();
     } else {
-        console.log(user);
+        // console.log(user);
         res.status(401).json({ message: 'Unauthorized' });
     }
 };

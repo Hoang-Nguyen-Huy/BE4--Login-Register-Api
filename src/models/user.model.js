@@ -179,5 +179,33 @@ User.updateUserDetail = (userid, updateDetail, result) => {
     });
 };   
 
+User.getAllUserDetails = (result) => {
+    const query = `SELECT u.userid AS userId, u.username, u.role, ud.lname, ud.fname, ud.age, ud.email 
+                    FROM user u, user_detail ud 
+                    WHERE u.userid = ud.userid`;
+
+    sql.query(query, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        const userDetails = res.map(row => ({
+            id: row.userId, 
+            username: row.username,
+            role: row.role,
+            detail: {
+                lname: row.lname,
+                fname: row.fname,
+                age: row.age,
+                email: row.email
+            }
+        }));
+
+        result(null, userDetails);
+    });
+};
+
 module.exports = User;
 

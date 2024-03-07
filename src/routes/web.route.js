@@ -1,7 +1,7 @@
 var router = require('express').Router();
 const authMiddleware = require('../middlewares/auth.middlewares');
 const User = require('../models/user.model');
-const updateAccount = require('../controllers/updateAccount.controller');
+const utils = require('../controllers/utils.controller');
 const bcrypt = require('bcrypt');
 
 module.exports = app => {
@@ -25,7 +25,9 @@ module.exports = app => {
         res.status(200).json({ id: userId, username: userName, role: userRole, detail: userDetail });
     });
 
-    router.put('/accounts/detail', updateAccount.update);  
+    router.put('/accounts/detail', utils.update);
+    
+    router.get('/accounts/', authMiddleware.authenticateJWT, authMiddleware.authorization, utils.getAll);
     
     app.use(router);
 }

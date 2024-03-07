@@ -150,5 +150,34 @@ User.findUserDetailByID = (userid, result) => {
     });
 };
 
+User.findUserDetailByEmail = (email, result) => {
+    sql.query(`SELECT * FROM user_detail WHERE email = '${email}'`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        if (res.length) {
+            result(null, res[0]);
+            return;
+        }
+        result(null, null);
+    });
+};
+
+User.updateUserDetail = (userid, updateDetail, result) => {
+    sql.query(`UPDATE user_detail SET lname = ?, fname = ?, age = ?, email = ? WHERE userid = ?`,
+    [updateDetail.lname, updateDetail.fname, updateDetail.age, updateDetail.email, userid],
+    (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        console.log(`Updated user detail for user with ID ${userid}`);
+        result(null, { lname: updateDetail.lname, fname: updateDetail.fname, age: updateDetail.age, email: updateDetail.email });
+    });
+};   
+
 module.exports = User;
 

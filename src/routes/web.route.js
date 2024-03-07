@@ -1,8 +1,7 @@
 var router = require('express').Router();
-const login = require('../controllers/login.controller');
-const register = require('../controllers/register.controller');
 const authMiddleware = require('../middlewares/auth.middlewares');
 const User = require('../models/user.model');
+const updateAccount = require('../controllers/updateAccount.controller');
 const bcrypt = require('bcrypt');
 
 module.exports = app => {
@@ -21,6 +20,8 @@ module.exports = app => {
         const userDetail = req.user.userDetail;
         res.status(200).json({ id: userId, username: userName, role: userRole, detail: userDetail });
     });
+
+    router.put('/accounts/detail', updateAccount.update);
     
     app.use(router);
 }

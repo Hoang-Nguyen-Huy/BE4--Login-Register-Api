@@ -13,6 +13,7 @@ module.exports = app => {
     //     console.log('hello i am admin');
     // });
 
+    // [GET]: /auth/profile --> findUserDetailByID
     router.get('/auth/profile', authMiddleware.authenticateJWT, (req, res) => {
         // console.log(req.headers);
         //req.user inclue {user, userDetail}

@@ -93,6 +93,35 @@ User.findByUserId = async(userid) => {
     }
 };
 
+User.findUserDetailByID = async (userid, result) => {
+    try {
+        //Query user table
+        const user = await prisma.user.findUnique({
+            where: {
+                userid: userid
+            }
+        });
+
+        //Query user_detail table
+        const userDetail = await prisma.userDetail.findUnique({
+            where: {
+                userid: userid
+            }
+        });
+
+        if (!user) {
+            result(null, null);
+            return;
+        }
+
+        // Return the combined user and userDetail objects
+        result(null, { user, userDetail });
+    } catch(error) {
+        console.error("Error finding user detail: ", error);
+        result(error, null);
+    }
+};
+
 // User.create = (newUser, result) => {
 //     if (!newUser.userid) {
 //         //Generate a random UUID (v4)

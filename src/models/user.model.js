@@ -79,6 +79,20 @@ User.findByUserName = async(username) => {
     }
 };
 
+User.findByUserId = async(userid) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                userid
+            }
+        });
+        return user;
+    } catch(error) {
+        console.error("Error finding user by username: ", error);
+        throw error;
+    }
+};
+
 // User.create = (newUser, result) => {
 //     if (!newUser.userid) {
 //         //Generate a random UUID (v4)

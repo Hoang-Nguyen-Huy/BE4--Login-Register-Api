@@ -8,33 +8,33 @@ const e = require('express');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     const { username, password } = req.body;
 
     if (username && password) {
-        User.findByUserName(username, (err, user) => {
-            if (!user) {
-                res.status(404).json({ message: 'User not found!!!' });
-            } else {
-                bcrypt.compare(password, user.password, (err, result) => {
-                    if (result === true) {
-                        //User authentication successful
+        const existingUser = await User.findByUserName(username);
 
-                        //Create a JWT token with user information
-                        const accessToken = jwt.sign({ id: user.userid, username: user.username }, process.env.JWT_SECRET);
+        if (!existingUser) {
+            res.status(404).json({ message: 'User not found!!!' });
+        } else {
+            bcrypt.compare(password, existingUser.password, (err, result) => {
+                if (result === true) {
+                    //User authentication successful
+
+                    //Create a JWT token with user information
+                    const accessToken = jwt.sign({ id: existingUser.userid, username: existingUser.username }, process.env.JWT_SECRET);
 
 
-                        req.session.loggedin = true;
-                        req.session.user = user;
-                        // res.status(200).json({ message: 'Login successfully' });
-                        // res.redirect('/auth/profile');
-                        res.status(200).json({ accessToken });
-                    } else {
-                        res.status(404).json({ message: 'Incorrect password' });
-                    }
-                });
-            }
-        });
+                    req.session.loggedin = true;
+                    req.session.user = existingUser;
+                    // res.status(200).json({ message: 'Login successfully' });
+                    // res.redirect('/auth/profile');
+                    res.status(200).json({ accessToken });
+                } else {
+                    res.status(404).json({ message: 'Incorrect password' });
+                }
+            });
+        }
     } else {
         res.status(404).json({ message: 'Login failed' });
     }

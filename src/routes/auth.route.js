@@ -5,6 +5,7 @@ const authMiddleware = require('../middlewares/auth.middlewares');
 
 module.exports = app => {
     // router.get('/', authMiddleware.isAuth, login.login);
+    //[POST]: /auth/login-with-username-and-passowrd --> login 
     router.post('/auth/login-with-username-and-password', login.login);
 
     router.get('/auth/login-with-google', login.loginWithGoogle);

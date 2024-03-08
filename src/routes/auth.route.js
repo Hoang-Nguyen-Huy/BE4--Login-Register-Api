@@ -10,6 +10,8 @@ module.exports = app => {
     router.get('/auth/login-with-google', login.loginWithGoogle);
 
     // router.get('/register', authMiddleware.isAuth, register.register);
+
+    //[POST]: /accounts --> register --> create User and UserDetail
     router.post('/accounts', register.register)
 
     // router.get('/logout', authMiddleware.loggedin, login.logout);

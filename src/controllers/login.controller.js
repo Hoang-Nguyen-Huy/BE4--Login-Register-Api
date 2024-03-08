@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.loginWithGoogle = (req, res) => {
+exports.loginWithGoogle = async (req, res) => {
     const { credential } = req.query;
 
     async function verify() {
@@ -53,40 +53,33 @@ exports.loginWithGoogle = (req, res) => {
         const { sub, email, given_name, family_name } = payload;
 
         //Check if the user exists in the database
-        User.findByUserName(email, (err, user) => {
-            if (err) {
-                console.error('Error finding user by Google ID: ', err);
-                res.status(500).json({ message: 'Error finding user by Google ID' });
-                return;
-            }
-            if (!user) {
-                const newUser = { 
-                    username: email, 
-                    detail: {
-                        fname: given_name, 
-                        lname: family_name, 
-                        email: email
-                    }
-                };
+        const existingUser = await User.findByUserName(email);
 
-                User.create(newUser, (err, createdUser) => {
-                    if (err) {
-                        console.error('Error creating user: ', err);
-                        res.status(500).json({ message: 'Error creating user' });
-                        return;
-                    }
+        if (!existingUser) {
+            const newUser = {
+                username: email,
+                detail: {
+                    lname: family_name,
+                    fname: given_name,
+                    email: email
+                }
+            };
 
-                    // User created successfully
-                    // Generate access token and return it
-                    const accessToken = jwt.sign({ id: createdUser.userid, username: email }, process.env.JWT_SECRET);
-                    res.status(200).json({ accessToken });
-                });
-            } else {
-                // User exists, generate access token and return it
-                const accessToken = jwt.sign({ id: user.userid, username: email }, process.env.JWT_SECRET);
+            User.create(newUser, (err, createdUser) => {
+                if (err) {
+                    console.error("Error creating user: ", err);
+                    return res.status(400).json({ message: 'Error creating user' });
+                }
+                // User created successfully
+                // Generate access token and return it
+                const accessToken = jwt.sign({ id: createdUser.userid, username: email }, process.env.JWT_SECRET);
                 res.status(200).json({ accessToken });
-            }
-        });
+            });
+        } else {
+            // User exists, generate access token and return it
+            const accessToken = jwt.sign({ id: existingUser.userid, username: email }, process.env.JWT_SECRET);
+            res.status(200).json({ accessToken });
+        }
     }
 
     verify().catch(err => {

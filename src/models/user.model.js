@@ -34,7 +34,7 @@ User.create = async(newUser, result) => {
             data: {
                 userid: newUser.userid,
                 username: newUser.username,
-                password: newUser.password,
+                password: newUser.password ? newUser.password : '',
                 role: newUser.role
             }
         });

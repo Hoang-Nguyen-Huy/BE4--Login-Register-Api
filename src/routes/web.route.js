@@ -26,6 +26,7 @@ module.exports = app => {
         res.status(200).json({ id: userId, username: userName, role: userRole, detail: userDetail });
     });
 
+    // [PUT]: /accounts/detail --> utils.update
     router.put('/accounts/detail', utils.update);
     
     router.get('/accounts/', authMiddleware.authenticateJWT, authMiddleware.authorization, utils.getAll);

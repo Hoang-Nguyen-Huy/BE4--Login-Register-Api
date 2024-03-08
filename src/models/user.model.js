@@ -122,6 +122,43 @@ User.findUserDetailByID = async (userid, result) => {
     }
 };
 
+User.findUserDetailByEmail = async(email) => {
+    try {
+        const userDetail = await prisma.userDetail.findFirst({
+            where: {
+                email: email
+            }
+        });
+        return userDetail;
+    } catch(error) {
+        console.error("Error finding user by email: ", error);
+        throw error;
+    }
+};
+
+User.updateUserDetail = async(userid, updateDetail, result) => {
+    try {
+        //Update user_detail table
+        const updateUserDetail = await prisma.userDetail.update({
+            where: {
+                userid: userid
+            },
+            data: {
+                lname: updateDetail.lname, 
+                fname: updateDetail.fname,
+                age: parseInt(updateDetail.age),
+                email: updateDetail.email
+            }
+        });
+
+        console.log(`Updated user detail for user with ID ${userid}`);
+        result(null, updateUserDetail);
+    } catch(error) {
+        console.error("Error updating usre detail: ", error);
+        result(error, null);
+    }
+};
+
 // User.create = (newUser, result) => {
 //     if (!newUser.userid) {
 //         //Generate a random UUID (v4)

@@ -169,7 +169,20 @@ User.getAllUserDetail = async (offset, take) => {
             skip: offset
         });
 
-        return userDetails;
+       // Re-mapping the data to achieve the desired format
+       const formattedData = userDetails.map(detail => ({
+        id: detail.userid,
+        username: detail.user.username,
+        role: detail.user.role,
+        detail: {
+            lname: detail.lname,
+            fname: detail.fname,
+            age: detail.age,
+            email: detail.email
+        }
+    }));
+
+    return formattedData;
     } catch(error) {
         console.error("Error fetching user details: ", error);
         throw new Error("Error fetching user details");

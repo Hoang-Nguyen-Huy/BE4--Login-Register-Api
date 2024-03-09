@@ -159,6 +159,23 @@ User.updateUserDetail = async(userid, updateDetail, result) => {
     }
 };
 
+User.getAllUserDetail = async (offset, take) => {
+    try {
+        const userDetails= await prisma.userDetail.findMany({
+            include: {
+                user: true
+            },
+            take: parseInt(take), 
+            skip: offset
+        });
+
+        return userDetails;
+    } catch(error) {
+        console.error("Error fetching user details: ", error);
+        throw new Error("Error fetching user details");
+    }
+};
+
 // User.create = (newUser, result) => {
 //     if (!newUser.userid) {
 //         //Generate a random UUID (v4)

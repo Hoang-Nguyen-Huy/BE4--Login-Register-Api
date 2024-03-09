@@ -29,6 +29,7 @@ module.exports = app => {
     // [PUT]: /accounts/detail --> utils.update
     router.put('/accounts/detail', utils.update);
     
+    //[GET]: /accounts/ --> utils.getAll
     router.get('/accounts/', authMiddleware.authenticateJWT, authMiddleware.authorization, utils.getAll);
     
     app.use(router);

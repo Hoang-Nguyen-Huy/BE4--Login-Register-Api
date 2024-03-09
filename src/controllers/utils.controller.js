@@ -1,75 +1,85 @@
-const User = require('../models/user.model');
+const User = require("../models/user.model");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 exports.update = async (req, res) => {
-    const { lname, fname, age, email } = req.body;
+  const { lname, fname, age, email } = req.body;
 
-    const updateUserDetail = await User.findUserDetailByEmail(email);
-    if (!updateUserDetail) {
-        return res.status(500).json({ message: 'Error updating user detail' });
+  const updateUserDetail = await User.findUserDetailByEmail(email);
+  if (!updateUserDetail) {
+    return res.status(500).json({ message: "Error updating user detail" });
+  } else {
+    const updateUser = await User.findByUserId(updateUserDetail.userid);
+    if (!updateUser) {
+      return res.status(500).json({ message: "Error updating user detail" });
     } else {
-        const updateUser = await User.findByUserId(updateUserDetail.userid);
-        if (!updateUser) {
-            return res.status(500).json({ message: 'Error updating user detail' });
-        } else {
-            User.updateUserDetail(updateUser.userid, { lname, fname, age, email }, (err, updated) => {
-                if (err) {
-                    return res.status(500).json({ message: 'Error updating user detail' });
-                }
-                const responseData = {
-                    id: updateUser.userid, 
-                    username: updateUser.username, 
-                    role: updateUser.role, 
-                    detail: updated
-                };
-                
-                res.status(200).json(responseData);
-            });
+      User.updateUserDetail(
+        updateUser.userid,
+        { lname, fname, age, email },
+        (err, updated) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({ message: "Error updating user detail" });
+          }
+          const responseData = {
+            id: updateUser.userid,
+            username: updateUser.username,
+            role: updateUser.role,
+            detail: updated,
+          };
+
+          res.status(200).json(responseData);
         }
+      );
     }
+  }
 };
 
-exports.getAll = (req, res) => {
-    const { page, take } = req.query;
+exports.getAll = async (req, res) => {
+  const { page, take } = req.query;
 
-    // Calculating offset is just to get data from the page and how much to get
-    const offset = (page - 1) * take;
+  if (!take || isNaN(parseInt(take))) {
+    return res.status(400).json({ message: "take parameter is missing or invalid" });
+  }
 
-    User.getAllUserDetails((err, userDetails) => {
-        if (err) {
-            return res.status(500).json({message: 'Error fetching user details' });
-        }
+  // Calculating offset is just to get data from the page and how much to get
+  const offset = (page - 1) * take;
 
-        // Number of records queried
-        const totalRecord = userDetails.length;
+  try {
+    const userDetails = await User.getAllUserDetail(offset, take);
 
-        // Calculating numbers of needing page
-        const totalPage = Math.ceil(totalRecord / take);
+    // Number of records queried
+    const totalRecord = await prisma.userDetail.count();
 
-        // Take data for the current page
-        const data = userDetails.slice(offset, offset + parseInt(take));
+    // Calculating numbers of needing page
+    const totalPage = Math.ceil(totalRecord / take);
 
-        // Determine the previous page
-        const prevPage = parseInt(page) > 1 ? parseInt(page) - 1 : null;
+    // Determine the previous page
+    const prevPage = parseInt(page) > 1 ? parseInt(page) - 1 : null;
 
-        // Determine the next page
-        const nextPage = parseInt(page) < totalPage ? parseInt(page) + 1 : null;
+    // Determine the next page
+    const nextPage = parseInt(page) < totalPage ? parseInt(page) + 1 : null;
 
-        const responseData = {
-            page: parseInt(page), 
-            take: parseInt(take),
-            data: data, 
-            totalRecord: totalRecord,
-            totalPage: totalPage
-        };
+    const responseData = {
+      page: parseInt(page),
+      take: parseInt(take),
+      data: userDetails,
+      totalRecord: totalRecord,
+      totalPage: totalPage,
+    };
 
-        if (nextPage != null) {
-            responseData.nextPage = nextPage;
-        }
+    if (nextPage !== null) {
+      responseData.nextPage = nextPage;
+    }
 
-        if (prevPage != null) {
-            responseData.prevPage = prevPage;
-        }
+    if (prevPage !== null) {
+      responseData.prevPage = prevPage;
+    }
 
-        res.status(200).json(responseData);
-    });
+    res.status(200).json(responseData);
+  } catch (error) {
+    console.error("Error fetching user details: ", error);
+    res.status(500).json({ message: "Error fetching user details" });
+  }
 };

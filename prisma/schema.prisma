@@ -27,5 +27,13 @@ model UserDetail {
   age    Int?
   email  String? @unique
   userid String  @unique
+  avatar String 
   user   User     @relation(fields: [userid], references: [userid]) // Mối quan hệ nhiều-một với bảng 'user'
+}
+
+model local_file {
+  id      String @unique
+  disPath String 
+  fileName String
+  createdAt DateTime @default(now())
 }

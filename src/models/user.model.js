@@ -7,7 +7,8 @@ const UserDetail = function(userDetail) {
     this.fname = userDetail.fname;
     this.age = userDetail.age;
     this.email = userDetail.email;
-    this.userid = userDetail.userid;
+    this.avatar = userDetail.avatar;
+    this.userid = userDetail.userid;  
 };
 
 const User = function(user) {

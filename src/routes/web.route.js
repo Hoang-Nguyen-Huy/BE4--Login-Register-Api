@@ -23,6 +23,7 @@ module.exports = app => {
         const userName = req.user.user.username;
         const userRole = req.user.user.role;
         const userDetail = req.user.userDetail;
+        console.log(req.user.userDetail.avatar);
         res.status(200).json({ id: userId, username: userName, role: userRole, detail: userDetail });
     });
 

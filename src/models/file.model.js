@@ -38,4 +38,32 @@ Local_Files.create = async (newFiles, result) => {
     }
 }
 
+Local_Files.findById = async(id) => {
+    try {
+        const file = await prisma.local_file.findUnique({
+            where: {
+                id
+            }
+        });
+        return file;
+    } catch(error) {
+        console.error("Error finding file by id: ", error);
+        throw error;
+    }
+};
+
+Local_Files.findByName = async(filename) => {
+    try {
+        const file = await prisma.local_file.findFirst({
+            where: {
+                fileName: filename
+            }
+        });
+        return file;
+    } catch(error) {
+        console.error("Error finding file by name: ", error);
+        throw error;
+    }
+};
+
 module.exports = Local_Files;

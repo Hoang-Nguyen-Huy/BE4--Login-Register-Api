@@ -33,7 +33,7 @@ model UserDetail {
 
 model local_file {
   id      String @id @default(cuid())
-  disPath String 
+  diskPath String 
   fileName String
   createdAt DateTime @default(now())
 }

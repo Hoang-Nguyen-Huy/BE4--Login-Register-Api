@@ -1,5 +1,6 @@
 const multer = require('multer');
 const fs = require('fs');
+const uploadFile = require('../models/file.model');
 const uploadsFolder = "uploads";
 
 exports.storage = multer.diskStorage({
@@ -23,7 +24,18 @@ exports.storage = multer.diskStorage({
     }
 });
 
-exports.upFile = async (req, res, next) => {
+exports.upFile = async (req, res) => {
     const file = req.file;
-    console.log(file);
+    const createdLocalFile = {
+        diskPath: file.path,
+        fileName: file.filename
+    };
+    uploadFile.create(createdLocalFile, (err, newLocalFile) => {
+        if (err) {
+            console.error("Error creating local file: ", err);
+            return res.status(400).json({ message: 'Error creating local file' });
+        }
+        const url = `${req.protocol}://${req.headers.host}/local-files/${newLocalFile.id}`;
+        return res.status(201).json(url);
+    });
 }

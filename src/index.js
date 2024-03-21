@@ -41,6 +41,8 @@ const funcAuthRoute = require('./routes/auth.route');
 funcAuthRoute(app);
 const funcWebRoute = require('./routes/web.route');
 funcWebRoute(app);
+const funcUploadRoute = require('./routes/uploadFile.route');
+funcUploadRoute(app);
 
 app.listen(port, () => {
     console.log(`\nnavigate to http://localhost:${port}\n`);

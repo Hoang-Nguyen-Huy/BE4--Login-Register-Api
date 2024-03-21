@@ -15,7 +15,7 @@ CREATE TABLE `UserDetail` (
     `age` INTEGER NULL,
     `email` VARCHAR(191) NULL,
     `userid` VARCHAR(191) NOT NULL,
-
+    `avatar` VARCHAR(200) DEFAULT "",
     UNIQUE INDEX `UserDetail_userid_key`(`userid`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -27,8 +27,8 @@ CREATE TABLE `local_file`(
     `createdAt` DATETIME
 )
 
---Add attribute avt
-ALTER TABLE `UserDetail` ADD COLUMN `avatar` VARCHAR(200);
+-- --Add attribute avt
+-- ALTER TABLE `UserDetail` ADD COLUMN `avatar` VARCHAR(200) DEFAULT NULL;
 
 -- AddForeignKey
 ALTER TABLE `UserDetail` ADD CONSTRAINT `UserDetail_userid_fkey` FOREIGN KEY (`userid`) REFERENCES `User`(`userid`) ON DELETE RESTRICT ON UPDATE CASCADE;

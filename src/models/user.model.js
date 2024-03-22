@@ -44,8 +44,9 @@ User.create = async(newUser, result) => {
             data: {
                 lname: newUser.detail.lname,
                 fname: newUser.detail.fname, 
-                age: newUser.detail.age,
+                age: parseInt(newUser.detail.age),
                 email: newUser.detail.email,
+                avt: newUser.detail.avt,
                 userid: createdUser.userid
             }
         });

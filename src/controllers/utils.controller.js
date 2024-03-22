@@ -3,19 +3,21 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 exports.update = async (req, res) => {
-  const { lname, fname, age, email } = req.body;
+  const { lname, fname, age, email, avt } = req.body;
 
   const updateUserDetail = await User.findUserDetailByEmail(email);
+
   if (!updateUserDetail) {
     return res.status(500).json({ message: "Error updating user detail" });
   } else {
     const updateUser = await User.findByUserId(updateUserDetail.userid);
+
     if (!updateUser) {
       return res.status(500).json({ message: "Error updating user detail" });
     } else {
       User.updateUserDetail(
         updateUser.userid,
-        { lname, fname, age, email },
+        { lname, fname, age, email, avt },
         (err, updated) => {
           if (err) {
             return res
@@ -28,6 +30,8 @@ exports.update = async (req, res) => {
             role: updateUser.role,
             detail: updated,
           };
+          
+          delete updated.userid;
 
           res.status(200).json(responseData);
         }

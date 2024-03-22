@@ -7,7 +7,7 @@ const UserDetail = function(userDetail) {
     this.fname = userDetail.fname;
     this.age = userDetail.age;
     this.email = userDetail.email;
-    this.avatar = userDetail.avatar;
+    this.avt = userDetail.avt;
     this.userid = userDetail.userid;  
 };
 
@@ -148,7 +148,8 @@ User.updateUserDetail = async(userid, updateDetail, result) => {
                 lname: updateDetail.lname, 
                 fname: updateDetail.fname,
                 age: parseInt(updateDetail.age),
-                email: updateDetail.email
+                email: updateDetail.email,
+                avt: updateDetail.avt
             }
         });
 

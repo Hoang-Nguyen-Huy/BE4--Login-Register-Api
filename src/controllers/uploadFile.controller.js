@@ -36,6 +36,12 @@ exports.upFile = async (req, res) => {
             return res.status(400).json({ message: 'Error creating local file' });
         }
         const url = `${req.protocol}://${req.headers.host}/local-files/${newLocalFile.id}`;
-        return res.status(201).json(url);
+        return res.status(201).json({ url });
     });
+}
+
+exports.getFile = async (req, res) => {
+    const id = req.params.id;
+    const file = await uploadFile.findById(id);
+    return res.sendFile(file.diskPath, { root: "." });  
 }

@@ -27,7 +27,7 @@ model UserDetail {
   age    Int?
   email  String? @unique
   userid String  @unique
-  avatar String  @default("")
+  avt String  @default("")
   user   User     @relation(fields: [userid], references: [userid]) // Mối quan hệ nhiều-một với bảng 'user'
 }
 

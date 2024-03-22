@@ -7,5 +7,8 @@ module.exports = app => {
     // [POST]: /local-files/
     router.post('/local-files/', upload.single('file'), uploadFile.upFile);
 
+    //[GET]: /local-files/:id
+    router.get('/local-files/:id', uploadFile.getFile);
+    
     app.use(router);
 }

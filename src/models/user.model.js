@@ -181,7 +181,8 @@ User.getAllUserDetail = async (offset, take) => {
             lname: detail.lname,
             fname: detail.fname,
             age: detail.age,
-            email: detail.email
+            email: detail.email,
+            avt: detail.avt
         }
     }));
 

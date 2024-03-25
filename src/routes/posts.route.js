@@ -6,5 +6,11 @@ module.exports = app => {
     //[POST]: /posts/
     router.post('/posts/', authMiddleware.authenticateJWT, Posts.post);
 
+    //[PUT]: /posts/{id}
+    router.put('/posts/:id', Posts.update);
+
+    //[GET]: /posts/
+    router.get('/posts/', authMiddleware.authenticateJWT, Posts.getAll);
+
     app.use(router);
 }

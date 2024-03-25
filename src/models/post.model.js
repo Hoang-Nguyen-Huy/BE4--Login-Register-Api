@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const { PrismaClient } = require('@prisma/client');
+const { resourceUsage } = require('process');
 const prisma = new PrismaClient();
+const User = require('../models/user.model');
 
 const Post = function(post) {
     this.id = post.id;
@@ -39,6 +41,67 @@ Post.create = async (newPost, result) => {
         result(error, null);
     }
 }; 
+
+Post.update = async(id, updatePost, result) => {
+    const currentDate = new Date();
+    try {
+        const updatedPost = await prisma.post.update({
+            where: {
+                id: id
+            },
+            data: {
+                content: updatePost.content,
+                modifiedAt: currentDate
+            }
+        });
+
+        console.log(`Updated post for id ${id}`);
+        result(null, updatedPost);
+    } catch(error) {
+        console.error("Error updating post: ", error);
+        result(error, null);
+    }
+};
+
+Post.getAll = async(userid, offset, take) => {
+    try {
+        const post = await prisma.post.findMany({
+            where: {
+                authorId: userid
+            },
+            take: parseInt(take), 
+            skip: offset
+        });
+
+        const userDetail = await User.findUserDetailByIDWithoutCallBack(userid);
+
+        const author = {
+            id: userDetail.user.userid,
+            username: userDetail.user.username,
+            role: userDetail.user.role,
+            detail: {
+                lname: userDetail.userDetail.lname,
+                fname: userDetail.userDetail.fname,
+                age: userDetail.userDetail.age,
+                email: userDetail.userDetail.email,
+                avt: userDetail.userDetail.avt
+            }
+        };
+
+        const formattedData = post.map(detail => ({
+            id: detail.id,
+            content: detail.content,
+            createdAt: detail.createdAt,
+            modifiedAt: detail.modifiedAt,
+            author: author
+        }));
+
+        return formattedData;
+    } catch(error) {
+        console.error('Error fetching post: ', error);
+        throw new Error('Error fetching post');
+    }
+};
 
 
 module.exports = Post;

@@ -124,6 +124,34 @@ User.findUserDetailByID = async (userid, result) => {
     }
 };
 
+User.findUserDetailByIDWithoutCallBack = async (userid) => { // Không cần tham số result nữa
+    try {
+        //Query user table
+        const user = await prisma.user.findUnique({
+            where: {
+                userid: userid
+            }
+        });
+
+        //Query user_detail table
+        const userDetail = await prisma.userDetail.findUnique({
+            where: {
+                userid: userid
+            }
+        });
+
+        if (!user) {
+            return null;
+        }
+
+        // Trả về kết quả user và userDetail
+        return { user, userDetail };
+    } catch(error) {
+        console.error("Error finding user detail: ", error);
+        throw error;
+    }
+};
+
 User.findUserDetailByEmail = async(email) => {
     try {
         const userDetail = await prisma.userDetail.findFirst({

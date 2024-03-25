@@ -43,6 +43,8 @@ const funcWebRoute = require('./routes/web.route');
 funcWebRoute(app);
 const funcUploadRoute = require('./routes/uploadFile.route');
 funcUploadRoute(app);
+const funcPostRoute = require('./routes/posts.route');
+funcPostRoute(app);
 
 app.listen(port, () => {
     console.log(`\nnavigate to http://localhost:${port}\n`);

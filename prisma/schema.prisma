@@ -19,6 +19,7 @@ model User {
   password String
   role     Int     @default(1)
   detail   UserDetail? // Mối quan hệ một-nhiều với bảng 'user_detail'
+  post     post[]
 }
 
 model UserDetail {
@@ -36,4 +37,13 @@ model local_file {
   diskPath String 
   fileName String
   createdAt DateTime @default(now())
+}
+
+model post {
+  id    String @id @default(cuid())
+  content String
+  createdAt DateTime @default(now())
+  modifiedAt DateTime?
+  authorId String 
+  user  User  @relation(fields: [authorId], references: [userid])
 }
